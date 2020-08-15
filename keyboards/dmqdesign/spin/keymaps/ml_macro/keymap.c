@@ -17,11 +17,35 @@
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(/* Base */
-                KC_7, KC_8, KC_9, KC_TRNS,
-                KC_4, KC_5, KC_6, KC_TRNS,
-                KC_1, KC_2, KC_3, KC_TRNS,
-                KC_0, RGB_TOG, KC_ENTER
+                KC_7,         KC_8,         KC_9,         KC_TRNS,
+                KC_MPRV,      KC_MNXT,      KC_MPLY,      KC_TRNS,
+                KC_1,         KC_2,         KC_3,         KC_TRNS,
+                KC_0,         M(WIN_TAB),   KC_PSCR
                 ),
+};
+
+// Macro Declarations
+enum custom_keycodes{
+    WIN_TAB = 0,
+    YOUR_MACRO_2,
+    // ..., the rest of your macros
+};
+
+// Macro Definitions
+const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
+{
+  switch(id) {
+    // for more complex macros (want to add modifiers, etc.)
+    case WIN_TAB: {
+      if (recond->event.pressed) {
+        return MACRO(
+          // INSERT CODE HERE for your macro. See https://docs.qmk.fm/macros.html
+
+        );
+      }
+    }
+  }
+  return MACRO_NONE;
 };
 
 void encoder_update_user(uint8_t index, bool clockwise) {
@@ -31,13 +55,13 @@ void encoder_update_user(uint8_t index, bool clockwise) {
     } else {
       rgblight_decrease_hue();
     }
-  } else if (index == 1) { /* Second encoder */  
+  } else if (index == 1) { /* Second encoder */
     if (clockwise) {
       tap_code(KC_VOLU); //Example of using tap_code which lets you use keycodes outside of the keymap
     } else {
       tap_code(KC_VOLD);
     }
-  } else if (index == 2) { /* Third encoder */  
+  } else if (index == 2) { /* Third encoder */
     if (clockwise) {
       rgblight_increase_val(); //Change brightness on the RGB LEDs
     } else {
