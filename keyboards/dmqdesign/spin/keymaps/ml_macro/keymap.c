@@ -18,34 +18,40 @@
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT(/* Base */
                 KC_7,         KC_8,         KC_9,         KC_TRNS,
-                KC_MPRV,      KC_MNXT,      KC_MPLY,      KC_TRNS,
+                KC_MPRV,      KC_MPLY,      KC_MNXT,      KC_TRNS,
                 KC_1,         KC_2,         KC_3,         KC_TRNS,
-                KC_0,         M(WIN_TAB),   KC_PSCR
+                KC_PSCR,      DTP_LEFT,     DTP_RIGHT
                 ),
 };
 
-// Macro Declarations
-enum custom_keycodes{
-    WIN_TAB = 0,
-    YOUR_MACRO_2,
-    // ..., the rest of your macros
+enum custom_keycodes {
+    QMKBEST = SAFE_RANGE,
+    QMKURL,
+    MY_OTHER_MACRO,
 };
 
-// Macro Definitions
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
-{
-  switch(id) {
-    // for more complex macros (want to add modifiers, etc.)
-    case WIN_TAB: {
-      if (recond->event.pressed) {
-        return MACRO(
-          // INSERT CODE HERE for your macro. See https://docs.qmk.fm/macros.html
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+    case DTP_LEFT:
+        if (record->event.pressed) {
+            register_code(KC_LGUI);
+            register_code(KC_LCTRL);
+            register_code(KC_LEFT);
+        } break;
 
-        );
-      }
+    case DTP_RIGHT:
+        if (record->event.pressed) {
+            register_code(KC_LGUI);
+            register_code(KC_LCTRL);
+            register_code(KC_RIGHT);
+        } break;
+
+    // case MY_OTHER_MACRO:
+    //     if (record->event.pressed) {
+    //        SEND_STRING(SS_LCTL("ac")); // selects all and copies
+    //     } break;
     }
-  }
-  return MACRO_NONE;
+    return true;
 };
 
 void encoder_update_user(uint8_t index, bool clockwise) {
