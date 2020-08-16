@@ -1,72 +1,93 @@
 #include QMK_KEYBOARD_H
 
 enum custom_keycodes {
-    DTP_LEFT = SAFE_RANGE,
-    DTP_RIGHT,
+    DTP_LFT = SAFE_RANGE,
+    DTP_RGT,
     DTP_MID,
 };
 
+//----------------------------------------------------------------------------------------------------------------------------------------
+//-- LAYERS ------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    [0] = LAYOUT(/* Base */
-                KC_7,         KC_8,         KC_9,         KC_TRNS,
-                KC_MPRV,      KC_MPLY,      KC_MNXT,      KC_TRNS,
-                KC_1,         KC_2,         KC_3,         KC_TRNS,
-                DTP_LEFT,     DTP_MID,      DTP_RIGHT
+    [0] = LAYOUT( /* Base */
+                _______,      _______,      RGB_TOG,        TG(1),
+                KC_MPRV,      KC_MPLY,      KC_MNXT,        _______,
+                _______,      KC_PSCR,      _______,        _______,
+                DTP_LFT,      DTP_MID,      DTP_RGT
+                ),
+
+    [1] = LAYOUT( /* LAYER 1 -- TAP UPPER KNOB */
+                _______,      _______,      RGB_MOD,        _______,
+                _______,      _______,      _______,        _______,
+                _______,      _______,      _______,        _______,
+                _______,      _______,      _______
                 ),
 };
 
+//----------------------------------------------------------------------------------------------------------------------------------------
+//-- MACROS ------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-    case DTP_LEFT:
-        if (record->event.pressed) {
-            register_code(KC_LGUI);
-            register_code(KC_LCTRL);
-            register_code(KC_LEFT);
-            unregister_code(KC_LGUI);
-            unregister_code(KC_LCTRL);
-            unregister_code(KC_LEFT);
-        } break;
+      case DTP_LFT:
+          if (record->event.pressed) {
+              register_code(KC_LGUI);
+              register_code(KC_LCTRL);
+              register_code(KC_LEFT);
+              clear_keyboard();
+          } break;
 
-    case DTP_RIGHT:
-        if (record->event.pressed) {
-            register_code(KC_LGUI);
-            register_code(KC_LCTRL);
-            register_code(KC_RIGHT);
-            unregister_code(KC_LGUI);
-            unregister_code(KC_LCTRL);
-            unregister_code(KC_RIGHT);
-        } break;
+      case DTP_RGT:
+          if (record->event.pressed) {
+              register_code(KC_LGUI);
+              register_code(KC_LCTRL);
+              register_code(KC_RIGHT);
+              clear_keyboard();
+          } break;
 
-    case DTP_MID:
-        if (record->event.pressed) {
-            register_code(KC_LGUI);
-            register_code(KC_TAB);
-            unregister_code(KC_LGUI);
-            unregister_code(KC_TAB);
-        } break;
-
+      case DTP_MID:
+          if (record->event.pressed) {
+              register_code(KC_LGUI);
+              register_code(KC_TAB);
+              clear_keyboard();
+          } break;
     }
     return true;
 };
 
+//----------------------------------------------------------------------------------------------------------------------------------------
+//-- ENCODER CODES -----------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------
+
 void encoder_update_user(uint8_t index, bool clockwise) {
   if (index == 0) { /* First encoder */
-    if (clockwise) {
-      rgblight_increase_hue(); //Cycle through the RGB hue
-    } else {
-      rgblight_decrease_hue();
+    switch (currentLayer) {
+      case 0: // BASE LAYER
+        if (clockwise) {
+          rgblight_increase_hue(); //Cycle through the RGB hue
+        } else {
+          rgblight_decrease_hue();
+        }
+      case 1: // FIRST LAYER
+        if (clockwise) {
+          rgblight_increase_val(); //Change brightness on the RGB LEDs
+        } else {
+          rgblight_decrease_val();
+        }
     }
-  } else if (index == 1) { /* Second encoder */
+  }  else if (index == 1) { /* second encoder -- EMPTY */
+
+
+
+
+  } else if (index == 2) { /* third encoder */
     if (clockwise) {
-      tap_code(KC_VOLU); //Example of using tap_code which lets you use keycodes outside of the keymap
+      tap_code(KC_VOLU);
     } else {
       tap_code(KC_VOLD);
-    }
-  } else if (index == 2) { /* Third encoder */
-    if (clockwise) {
-      rgblight_increase_val(); //Change brightness on the RGB LEDs
-    } else {
-      rgblight_decrease_val();
     }
   }
 }
