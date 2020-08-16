@@ -20,7 +20,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                 KC_7,         KC_8,         KC_9,         KC_TRNS,
                 KC_MPRV,      KC_MPLY,      KC_MNXT,      KC_TRNS,
                 KC_1,         KC_2,         KC_3,         KC_TRNS,
-                KC_PSCR,      DTP_LEFT,     DTP_RIGHT
+                DTP_LEFT,     DTP_MID,     DTP_RIGHT
                 ),
 };
 
@@ -40,6 +40,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         } break;
 
     case DTP_RIGHT:
+        if (record->event.pressed) {
+            register_code(KC_LGUI);
+            register_code(KC_LCTRL);
+            register_code(KC_RIGHT);
+        } break;
+
+    case DTP_MID:
         if (record->event.pressed) {
             register_code(KC_LGUI);
             register_code(KC_LCTRL);
