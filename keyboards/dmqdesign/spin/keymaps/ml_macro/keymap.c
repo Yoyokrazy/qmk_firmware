@@ -2,8 +2,6 @@
 #define _MEDIA 0
 #define _RGB 1
 
-uint8_t currentLayer;
-
 enum custom_keycodes {
     DTP_LFT = SAFE_RANGE,
     DTP_RGT,
@@ -18,15 +16,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_MEDIA] = LAYOUT( /* Base */
                 _______,      _______,      RGB_TOG,        TO(_RGB),
                 KC_MPRV,      KC_MPLY,      KC_MNXT,        _______,
-                _______,      KC_PSCR,      _______,        _______,
+                _______,      KC_PSCR,      _______,        KC_MUTE,
                 DTP_LFT,      DTP_MID,      DTP_RGT
                 ),
 
     [_RGB] = LAYOUT( /* LAYER 1 -- TAP UPPER KNOB */
-                _______,      _______,      RGB_MOD,        TO(_MEDIA),
+                _______,      _______,      _______,        TO(_MEDIA),
                 _______,      _______,      _______,        _______,
                 _______,      _______,      _______,        _______,
-                _______,      KC_NO,        _______
+                _______,      _______,      _______
               ),
 };
 
@@ -99,3 +97,29 @@ void encoder_update_user(uint8_t index, bool clockwise) {
     }
   }
 }
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+//-- LAYER LIGHTING ----------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------------------------------------------------
+
+// layer_state_t layer_state_set_user(layer_state_t state) { //This will run every time the layer is updated
+//     switch(biton32(layer_state)) {
+//         case 1:
+//             setrgb(RGB_WHITE, &led[0]); //Set the top LED to white for the bottom layer
+//             setrgb(0, 0, 0, &led[1]);
+//             setrgb(0, 0, 0, &led[2]);
+//             break;
+//         case 0:
+//             setrgb(0, 0, 0, &led[0]); //Set the middle LED to white for the middle layer
+//             setrgb(RGB_WHITE, &led[1]);
+//             setrgb(0, 0, 0, &led[2]);
+//             break;
+//         // case 2:
+//         //     setrgb(0, 0, 0, &led[0]);
+//         //     setrgb(0, 0, 0, &led[1]);
+//         //     setrgb(RGB_WHITE, &led[2]); //Set the bottom LED to white for the top layer
+//         //     break;
+//     }
+//     rgblight_set();
+//     return state;
+// }
